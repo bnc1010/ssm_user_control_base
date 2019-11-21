@@ -9,17 +9,16 @@ import com.artisan.common.utils.Base64Util;
 import com.artisan.pojo.db.User;
 import com.artisan.pojo.vo.ResultBean;
 import com.artisan.pojo.vo.UserVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 平台登录登出
@@ -109,6 +108,42 @@ public class HomeHandler extends BaseHandler {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg("Logout failed!");
             LOGGER.error("遇到未知错误，退出失败！", e);
+        }
+        return resultBean;
+    }
+
+    /**
+     *注册
+     * 2019/11/4
+     * bnc
+     **/
+    @ApiOperation(value = "用户注册")
+    @ResponseBody
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResultBean add(@ApiParam(value = "新增User实体", required = true) @RequestBody @Valid User user, BindingResult result) {
+        ResultBean resultBean = new ResultBean();
+        StringBuilder errorMsg = new StringBuilder("");
+        if (userService.isExist(user.getUserName())){
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setData("该用户名已注册");
+        }
+        else{
+            if (result.hasErrors()) {
+                List<ObjectError> list = result.getAllErrors();
+                for (ObjectError error : list) {
+                    errorMsg = errorMsg.append(error.getCode()).append("-").append(error.getDefaultMessage()).append(";");
+                }
+                resultBean.setCode(StatusCode.HTTP_FAILURE);
+                resultBean.setData(errorMsg.toString());
+                return resultBean;
+            }
+            try {
+                userService.insert(user);
+            } catch (Exception e) {
+                resultBean.setCode(StatusCode.HTTP_FAILURE);
+                resultBean.setMsg("注册失败！");
+                LOGGER.error("新增User失败！参数信息：User = " + user.toString(), e);
+            }
         }
         return resultBean;
     }

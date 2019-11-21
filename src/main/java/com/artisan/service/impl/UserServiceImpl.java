@@ -27,4 +27,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public User getUser(String userName, String password) {
         return userMapper.getUser(userName,password);
     }
+
+    @Override
+    public boolean isExist(String userName) {
+        return userMapper.getUserByUserName(userName) > 0;
+    }
 }

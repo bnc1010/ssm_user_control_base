@@ -16,4 +16,6 @@ public interface IUserService extends IBaseService<User> {
      * @return
      */
     User getUser(String userName, String password);
+
+    boolean isExist(String userName);
 }

@@ -8,4 +8,5 @@ public interface UserMapper extends MyMapper<User> {
 
     User getUser(@Param("userName") String userName, @Param("password") String password);
 
+    int getUserByUserName(@Param("userName") String userName);
 }
