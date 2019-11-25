@@ -13,17 +13,14 @@
     <result column="age" property="age" jdbcType="INTEGER" />
   </resultMap>
 
-
   <!--根据用户名和密码获取用户信息-->
   <select id="getUser" resultMap="BaseResultMap">
-    select *
-    from user WHERE user_name = #{userName} AND password = #{password}
+    select * from user WHERE user_name = #{userName} AND password = #{password}
   </select>
 
   <!--判断用户名存不存在-->
-  <select id="getUserByUserName" resultMap="Integer">
-    select count (*)
-    from user WHERE user_name = #{userName}
+  <select id="getUserByUserName" resultType="Integer">
+    select count(*) from user WHERE user_name = #{userName}
   </select>
 
 </mapper>

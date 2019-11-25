@@ -1,11 +1,11 @@
 package com.artisan.handler;
 
-
 import com.artisan.authorization.manager.TokenManager;
 import com.artisan.authorization.model.TokenModel;
 import com.artisan.common.annotation.IgnoreSecurity;
 import com.artisan.common.constant.StatusCode;
 import com.artisan.common.utils.Base64Util;
+import com.artisan.common.utils.MD5Util;
 import com.artisan.pojo.db.User;
 import com.artisan.pojo.vo.ResultBean;
 import com.artisan.pojo.vo.UserVO;
@@ -53,6 +53,8 @@ public class HomeHandler extends BaseHandler {
         ResultBean resultBean = new ResultBean();
         UserVO userVO = new UserVO();
         try {
+            password = MD5Util.encrypt(password);
+//            System.out.println(password);
             User user = userService.getUser(userName, password);
             if (user == null) {
                 resultBean.setCode(StatusCode.HTTP_FAILURE);
@@ -120,23 +122,17 @@ public class HomeHandler extends BaseHandler {
     @ApiOperation(value = "用户注册")
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResultBean add(@ApiParam(value = "新增User实体", required = true) @RequestBody @Valid User user, BindingResult result) {
+    @IgnoreSecurity
+    public ResultBean add(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password) {
         ResultBean resultBean = new ResultBean();
-        StringBuilder errorMsg = new StringBuilder("");
-        if (userService.isExist(user.getUserName())){
+        if (userService.isExist(userName)){
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setData("该用户名已注册");
         }
         else{
-            if (result.hasErrors()) {
-                List<ObjectError> list = result.getAllErrors();
-                for (ObjectError error : list) {
-                    errorMsg = errorMsg.append(error.getCode()).append("-").append(error.getDefaultMessage()).append(";");
-                }
-                resultBean.setCode(StatusCode.HTTP_FAILURE);
-                resultBean.setData(errorMsg.toString());
-                return resultBean;
-            }
+            User user = new User();
+            user.setUserName(userName);
+            user.setPassword(MD5Util.encrypt(password));
             try {
                 userService.insert(user);
             } catch (Exception e) {

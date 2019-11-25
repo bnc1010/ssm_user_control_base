@@ -30,6 +30,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 
     @Override
     public boolean isExist(String userName) {
+        System.out.println(userName);
         return userMapper.getUserByUserName(userName) > 0;
     }
 }
