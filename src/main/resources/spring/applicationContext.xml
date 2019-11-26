@@ -106,6 +106,7 @@
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
     <tx:annotation-driven/>
 
     <!--Hibernate Validator-->

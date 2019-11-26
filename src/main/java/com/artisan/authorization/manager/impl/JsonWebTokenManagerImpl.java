@@ -12,8 +12,6 @@ import java.util.UUID;
 
 @Component
 public class JsonWebTokenManagerImpl implements JsonWebTokenManager {
-
-
     @Override
     public String createToken(long userId) {
 

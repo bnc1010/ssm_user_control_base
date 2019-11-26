@@ -71,7 +71,6 @@ public class HomeHandler extends BaseHandler {
                     //创建token
                     token = tokenManager.createToken(user.getuId());
                 }
-
                 userVO.setuId(user.getuId());
                 userVO.setuName(user.getUserName());
                 userVO.setAge(user.getAge());
