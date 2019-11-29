@@ -8,4 +8,9 @@
     <id column="p_id" property="pId" jdbcType="INTEGER" />
     <id column="r_id" property="rId" jdbcType="INTEGER" />
   </resultMap>
+
+  <select id="getPermissionIdOfByRoleId" resultType="Integer">
+    select p_id from role_permission WHERE r_id = #{roleId}
+  </select>
+
 </mapper>

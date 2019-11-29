@@ -1,5 +1,6 @@
 package com.artisan.common.aspect;
 
+import com.artisan.common.exception.AuthorityException;
 import com.artisan.common.exception.TokenException;
 import com.artisan.pojo.vo.ResultBean;
 import org.apache.log4j.Logger;
@@ -118,6 +119,20 @@ public class ExceptionAspect {
         resultBean.setCode(400);
         resultBean.setMsg("参数验证失败！");
         log.error("参数验证失败！", e);
+        return resultBean;
+    }
+
+
+    /**
+     * 403 - Internal Server Error
+     */
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(AuthorityException.class)
+    public ResultBean handleAuthorityException(Exception e) {
+        ResultBean resultBean = new ResultBean();
+        resultBean.setCode(403);
+        resultBean.setMsg("无权访问");
+        log.error("无权访问", e);
         return resultBean;
     }
 

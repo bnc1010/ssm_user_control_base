@@ -11,11 +11,11 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pId;
 
-    /**
-     * 权限类型
-     */
-    @Column(name = "p_type_name")
-    private String pTypeName;
+    @Column(name = "p_url")
+    private String pUrl;
+
+    @Column(name = "p_name")
+    private String pName;
 
     /**
      * 获取主键
@@ -36,21 +36,31 @@ public class Permission {
     }
 
     /**
-     * 获取权限类型
-     *
-     * @return p_type_name - 权限类型
+     * @return p_url
      */
-    public String getpTypeName() {
-        return pTypeName;
+    public String getpUrl() {
+        return pUrl;
     }
 
     /**
-     * 设置权限类型
-     *
-     * @param pTypeName 权限类型
+     * @param pUrl
      */
-    public void setpTypeName(String pTypeName) {
-        this.pTypeName = pTypeName;
+    public void setpUrl(String pUrl) {
+        this.pUrl = pUrl;
+    }
+
+    /**
+     * @return p_name
+     */
+    public String getpName() {
+        return pName;
+    }
+
+    /**
+     * @param pName
+     */
+    public void setpName(String pName) {
+        this.pName = pName;
     }
 
     @Override
@@ -60,7 +70,8 @@ public class Permission {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", pId=").append(pId);
-        sb.append(", pTypeName=").append(pTypeName);
+        sb.append(", pUrl=").append(pUrl);
+        sb.append(", pName=").append(pName);
         sb.append("]");
         return sb.toString();
     }

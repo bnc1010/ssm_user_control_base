@@ -31,18 +31,7 @@
                              type="XMLMAPPER"/>
 
         <!--需要生成的表，与数据库对应，需要在此处配置-->
-        <table tableName="file" domainObjectName="File">
-            <generatedKey column="f_id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="menu" domainObjectName="Menu">
-            <generatedKey column="m_id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="operation" domainObjectName="Operation">
-            <generatedKey column="o_id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="page" domainObjectName="Page">
-            <generatedKey column="page_id" sqlStatement="MySql" identity="true"/>
-        </table>
+
         <table tableName="permission" domainObjectName="Permission">
             <generatedKey column="p_id" sqlStatement="MySql" identity="true"/>
         </table>

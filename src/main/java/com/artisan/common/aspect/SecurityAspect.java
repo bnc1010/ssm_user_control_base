@@ -1,9 +1,11 @@
 package com.artisan.common.aspect;
 
+import com.artisan.authorization.manager.AuthorityManager;
 import com.artisan.authorization.manager.TokenManager;
 import com.artisan.authorization.model.TokenModel;
 import com.artisan.common.annotation.IgnoreSecurity;
 import com.artisan.common.constant.Constants;
+import com.artisan.common.exception.AuthorityException;
 import com.artisan.common.exception.TokenException;
 import com.artisan.common.utils.Base64Util;
 import com.artisan.common.utils.WebContextUtil;
@@ -34,6 +36,9 @@ public class SecurityAspect {
 
     @Autowired
     TokenManager tokenManager;
+
+    @Autowired
+    AuthorityManager authorityManager;
 
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object execute(ProceedingJoinPoint pjp) throws Throwable {
@@ -73,6 +78,13 @@ public class SecurityAspect {
             LOGGER.debug("message : " + message);
             throw new TokenException(message);
         }
+
+        //检查权限
+        if (!authorityManager.checkAuthority(tokenModel.getUserId(), requestUrl.getPath())){
+            throw new AuthorityException("无权访问");
+        }
+
+
         // 调用目标方法
         return pjp.proceed();
     }
