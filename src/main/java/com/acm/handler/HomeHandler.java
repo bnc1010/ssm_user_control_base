@@ -32,16 +32,10 @@ public class HomeHandler extends BaseHandler {
 
     /**
      * 登录
-     * @param userName 用户名
-     * @param password 密码，MD5加密
      * @return 登录结果信息
      */
-    @ApiOperation(value = "用户登录", notes = "用户登录")
+    @ApiOperation(value = "用户登录", notes = "参数：userName,password")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType = "query", name = "userName", value = "用户名", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType = "query", name = "password", value = "用户密码", required = true, dataType = "String"),
-//    })
     @ResponseBody
     @IgnoreSecurity
     public ResultBean login(@RequestBody UserVO requestUser) {
@@ -86,20 +80,16 @@ public class HomeHandler extends BaseHandler {
 
     /**
      * 登出
-     * @param userId 用户id
-     * @return
+     *
      */
-    @ApiOperation(value = "用户登出", notes = "用户登出")
+    @ApiOperation(value = "用户登出", notes = "参数：uId")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "userId", value = "用户id", required = true, dataType = "long")
-    })
     @IgnoreSecurity
     @ResponseBody
-    public ResultBean logout(@RequestParam(value = "userId") Long userId) {
+    public ResultBean logout(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
-            tokenManager.deleteToken(userId);
+            tokenManager.deleteToken(requestUser.getuId());
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg("Logout failed!");
@@ -113,20 +103,20 @@ public class HomeHandler extends BaseHandler {
      * 2019/11/4
      * bnc
      **/
-    @ApiOperation(value = "用户注册")
+    @ApiOperation(value = "用户注册", notes = "参数：userName,password")
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @IgnoreSecurity
-    public ResultBean add(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password) {
+    public ResultBean add(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
-        if (userService.isExist(userName)){
+        if (userService.isExist(requestUser.getUserName())){
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setData("该用户名已注册");
         }
         else{
             User user = new User();
-            user.setUserName(userName);
-            user.setPassword(MD5Util.encrypt(password));
+            user.setUserName(requestUser.getUserName());
+            user.setPassword(MD5Util.encrypt(requestUser.getPassword()));
             try {
                 userService.insert(user);
             } catch (Exception e) {
