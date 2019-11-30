@@ -55,7 +55,7 @@
     <!-- 通过CORS技术实现AJAX跨域访问 -->
     <filter>
         <filter-name>corsFilter</filter-name>
-        <filter-class>com.artisan.common.filter.CorsFilter</filter-class>
+        <filter-class>com.acm.common.filter.CorsFilter</filter-class>
         <init-param>
             <param-name>allowOrigin</param-name>
             <param-value>*</param-value>

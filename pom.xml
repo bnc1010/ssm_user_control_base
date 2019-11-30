@@ -284,8 +284,8 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <!--  Java Mapper接口和实体类  -->
         <targetJavaProject>${basedir}/src/main/java</targetJavaProject>
-        <targetMapperPackage>com.artisan.dao</targetMapperPackage>
-        <targetModelPackage>com.artisan.pojo.db</targetModelPackage>
+        <targetMapperPackage>com.acm.dao</targetMapperPackage>
+        <targetModelPackage>com.acm.pojo.db</targetModelPackage>
         <!--  XML生成路径  -->
         <targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
         <targetXMLPackage>mapper</targetXMLPackage>
