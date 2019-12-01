@@ -14,7 +14,7 @@ public interface TokenManager {
      * @param userId 指定用户的id
      * @return 生成的token
      */
-    TokenModel createToken(long userId);
+    TokenModel createToken(long userId, String authorityCode);
 
     /**
      * 检查token是否有效

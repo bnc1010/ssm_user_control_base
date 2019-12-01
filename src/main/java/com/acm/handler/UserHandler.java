@@ -4,7 +4,10 @@ import com.acm.common.constant.StatusCode;
 import com.acm.pojo.db.User;
 import com.acm.pojo.vo.ResultBean;
 import com.acm.pojo.vo.UserVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,8 @@ import java.util.List;
  * 用户管理
  * @author Leeyom Wang
  * @date 2017年10月26日 15:20
+ * 添加分页
+ * 2019年11月30日
  */
 @Api(description = "user管理", tags = "UserHandler", basePath = "/users")
 @Controller
@@ -26,14 +31,22 @@ public class UserHandler extends BaseHandler {
 
     private static final Logger LOGGER = Logger.getLogger(UserHandler.class);
 
-    @ApiOperation(value = "查询列表", notes = "参数:")
+    @ApiOperation(value = "查询列表", notes = "可选参数：pageNum,pageSize")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     @ResponseBody
-    public ResultBean getUserList() {
+    public ResultBean getUserList(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<User> userList = userService.selectAll();
+            List<User> userList = null;
+            int pageNum = 1;
+            int pageSize = 10;
+            if (requestUser.getPageNum() != null && requestUser.getPageSize() != null){
+                pageNum = requestUser.getPageNum();
+                pageSize = requestUser.getPageSize();
+            }
+            userList = userService.selectAll(pageNum, pageSize);
             resultBean.setData(userList);
+            resultBean.setEtxra(new PageInfo<User>(userList));
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg("Request User list Failed！");

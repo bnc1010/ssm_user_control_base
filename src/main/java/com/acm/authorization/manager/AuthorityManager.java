@@ -2,5 +2,8 @@ package com.acm.authorization.manager;
 
 
 public interface AuthorityManager {
-    boolean checkAuthority(long userId, String target);
+
+    boolean checkAuthority(String authorityCode, String target);
+
+    String getAuthorityCode(long userId);
 }

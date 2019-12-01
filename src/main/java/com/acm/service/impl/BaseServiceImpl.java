@@ -1,6 +1,8 @@
 package com.acm.service.impl;
 
 import com.acm.service.IBaseService;
+import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -36,8 +38,9 @@ public abstract class BaseServiceImpl<T> implements IBaseService<T> {
     }
 
     @Override
-    public List<T> selectAll() {
-        return mapper.selectAll();
+    public List<T> selectAll(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return mapper.select(null);
     }
 
     @Override

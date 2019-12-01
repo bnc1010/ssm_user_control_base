@@ -39,7 +39,9 @@ public class UserVO {
      * token
      */
 
+    private Integer pageNum;
 
+    private Integer pageSize;
 
     private String token;
 
@@ -99,6 +101,22 @@ public class UserVO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.UUID;
 @Component
 public class JsonWebTokenManagerImpl implements JsonWebTokenManager {
     @Override
-    public String createToken(long userId) {
+    public String createToken(long userId, String authorityCode) {
 
         // JWT的有效期为两个小时
         Calendar ca = Calendar.getInstance();
@@ -23,17 +23,18 @@ public class JsonWebTokenManagerImpl implements JsonWebTokenManager {
         // 签发 token
         String token = Jwts.builder()
                 // JWT 的签发者
-                .setIssuer("leeyom.com")
+                .setIssuer("acm.zjnu.edu")
                 // 主题
                 .setSubject("Test JWT")
                 // JWT 的接收方
-                .setAudience("client.leeyom.com")
+                .setAudience("client.acm.com")
                 // 过期时间
                 .setExpiration(ca.getTime())
                 // JWT 的签发时间
                 .setIssuedAt(new Date())
                 // 载荷中自定义数据
                 .claim("userId", userId + "")
+                .claim("authorityCode", authorityCode)
                 // JWT的唯一标识
                 .setId(UUID.randomUUID().toString())
                 // 签名

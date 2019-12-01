@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
  * token有效性判断切面
  * @author leeyom
  * @date 2017年10月19日 10:41
+ * @updatedate 2019年11月30日
  */
 @Component
 @Aspect
@@ -80,10 +81,11 @@ public class SecurityAspect {
         }
 
         //检查权限
-        if (!authorityManager.checkAuthority(tokenModel.getUserId(), requestUrl.getPath())){
+        if (!authorityManager.checkAuthority(tokenModel.getAuthorityCode(), requestUrl.getPath())){
+            String message = tokenModel.getUserId() + "try to enter " + requestUrl.getPath() + "without permission";
+            LOGGER.debug("message : " + message);
             throw new AuthorityException("无权访问");
         }
-
 
         // 调用目标方法
         return pjp.proceed();

@@ -5,9 +5,10 @@ public interface JsonWebTokenManager {
     /**
      * 创建一个 JWT token
      * @param userId 指定用户的id
+     * @param authorityCode 权限码
      * @return 生成的token
      */
-    String createToken(long userId);
+    String createToken(long userId, String authorityCode);
 
     /**
      * 检查 JWT token是否有效

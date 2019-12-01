@@ -17,6 +17,9 @@ public class Permission {
     @Column(name = "p_name")
     private String pName;
 
+    @Column(name = "P_code")
+    private String pCode;
+
     /**
      * 获取主键
      *
@@ -61,6 +64,14 @@ public class Permission {
      */
     public void setpName(String pName) {
         this.pName = pName;
+    }
+
+    public String getpCode() {
+        return pCode;
+    }
+
+    public void setpCode(String pCode) {
+        this.pCode = pCode;
     }
 
     @Override

@@ -35,14 +35,14 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
-    public TokenModel createToken(long userId) {
+    public TokenModel createToken(long userId, String authorityCode) {
         //uuid
         String uuid = UUID.randomUUID().toString().replace("-", "");
         //时间戳
         String timestamp = SDF.format(new Date());
-        //token => userId_timestamp_uuid;
-        String token = userId + "_" + timestamp + "_" + uuid;
-        TokenModel model = new TokenModel(userId, uuid, timestamp);
+        //token => authorityCode_userId_timestamp_uuid;
+        String token = userId + "_" + timestamp + "_" + uuid + "_" + authorityCode;
+        TokenModel model = new TokenModel(userId, uuid, timestamp, authorityCode);
         //存储到redis并设置过期时间(有效期为2个小时)
         redis.boundValueOps(userId).set(Base64Util.encodeData(token), Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return model;
@@ -54,14 +54,16 @@ public class RedisTokenManager implements TokenManager {
             return null;
         }
         String[] param = authentication.split("_");
-        if (param.length != 3) {
+        if (param.length != 4) {
             return null;
         }
+
         //使用userId和源token简单拼接成的token，可以增加加密措施
         long userId = Long.parseLong(param[0]);
         String timestamp = param[1];
         String uuid = param[2];
-        return new TokenModel(userId, uuid, timestamp);
+        String authorityCode = param[3];
+        return new TokenModel(userId, uuid, timestamp, authorityCode);
     }
 
     @Override
@@ -69,7 +71,10 @@ public class RedisTokenManager implements TokenManager {
         if (model == null) {
             return false;
         }
+        System.out.println("model:" + model.getToken());
+
         String token = redis.boundValueOps(model.getUserId()).get();
+        System.out.println("redis:" + token);
         if (token == null || !(Base64Util.decodeData(token)).equals(model.getToken())) {
             return false;
         }

@@ -1,5 +1,6 @@
 package com.acm.service;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface IBaseService<T> {
 
     T selectByPrimaryKey(Integer id);
 
-    List<T> selectAll();
+    List<T> selectAll(int pageNum, int pageSize);
 
     int updateByPrimaryKey(T record);
 

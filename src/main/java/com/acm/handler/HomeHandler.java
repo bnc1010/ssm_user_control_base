@@ -1,5 +1,6 @@
 package com.acm.handler;
 
+import com.acm.authorization.manager.AuthorityManager;
 import com.acm.authorization.manager.TokenManager;
 import com.acm.authorization.model.TokenModel;
 import com.acm.common.annotation.IgnoreSecurity;
@@ -30,6 +31,9 @@ public class HomeHandler extends BaseHandler {
     @Autowired
     private TokenManager tokenManager;
 
+    @Autowired
+    private AuthorityManager authorityManager;
+
     /**
      * 登录
      * @return 登录结果信息
@@ -50,15 +54,16 @@ public class HomeHandler extends BaseHandler {
                 resultBean.setMsg("Login failed, user name or password error！");
             } else {
                 TokenModel token;
+                String authorityCode = authorityManager.getAuthorityCode(user.getuId());
                 // 判断用户是否已经登录过，如果登录过，就将redis缓存中的token删除，重新创建新的token值，保证一个用户在一个时间段只有一个可用 Token
                 if (tokenManager.hasToken(user.getuId())) {
                     //清除过时的token
                     tokenManager.deleteToken(user.getuId());
                     //创建token
-                    token = tokenManager.createToken(user.getuId());
+                    token = tokenManager.createToken(user.getuId(), authorityCode);
                 } else {
                     //创建token
-                    token = tokenManager.createToken(user.getuId());
+                    token = tokenManager.createToken(user.getuId(), authorityCode);
                 }
                 userVO.setuId(user.getuId());
                 userVO.setUserName(user.getUserName());

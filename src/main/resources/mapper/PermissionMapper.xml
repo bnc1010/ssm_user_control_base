@@ -8,9 +8,14 @@
     <id column="p_id" jdbcType="INTEGER" property="pId" />
     <result column="p_url" jdbcType="VARCHAR" property="pUrl" />
     <result column="p_name" jdbcType="VARCHAR" property="pName" />
+    <result column="p_code" jdbcType="VARCHAR" property="pCode" />
   </resultMap>
 
   <select id="getPermissionById" resultMap="BaseResultMap">
     select * from permission where p_id = #{pid}
+  </select>
+
+  <select id="getPermissionByCode" resultMap="BaseResultMap">
+    select * from permission where p_code = #{pcode}
   </select>
 </mapper>
