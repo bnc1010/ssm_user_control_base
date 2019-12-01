@@ -32,7 +32,6 @@ public class AuthorityManagerImpl implements AuthorityManager {
      **/
     @Override
     public boolean checkAuthority(String authorityCode, String target) {
-        target = target.replace("/apis", "");
         String [] authorityCodes = authorityCode.split("&");
         for (String ac : authorityCodes){
             if (ac.equals("au:")){
