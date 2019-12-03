@@ -89,7 +89,6 @@ public class HomeHandler extends BaseHandler {
      */
     @ApiOperation(value = "用户登出", notes = "参数：uId")
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    @IgnoreSecurity
     @ResponseBody
     public ResultBean logout(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();

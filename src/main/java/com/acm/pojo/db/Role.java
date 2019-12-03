@@ -17,6 +17,9 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
+
+    @Column(name = "is_admin")
+    private int isAdmin;
     /**
      * 获取主键
      *
@@ -51,6 +54,15 @@ public class Role {
      */
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+
+    public int getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(int isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     @Override
