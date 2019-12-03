@@ -128,6 +128,16 @@ public class HomeHandler extends BaseHandler {
                 resultBean.setMsg("注册失败！");
                 LOGGER.error("新增User失败！参数信息：User = " + user.toString(), e);
             }
+            User newUser = userService.getUser(user.getUserName(),user.getPassword());
+            try{
+                userService.giveCommonRole(newUser.getuId());
+            }
+            catch (Exception e){
+                userService.deleteByPrimaryKey(newUser.getuId());
+                resultBean.setCode(StatusCode.HTTP_FAILURE);
+                resultBean.setMsg("注册失败！");
+                LOGGER.error("新增User失败！参数信息：User = " + user.toString(), e);
+            }
         }
         return resultBean;
     }

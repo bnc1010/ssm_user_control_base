@@ -9,4 +9,8 @@
     <result column="role_name" property="roleName" jdbcType="VARCHAR" />
     <result column="id_admin" property="roleName" jdbcType="VARCHAR" />
   </resultMap>
+
+  <select id="getCommonRole" resultMap="BaseResultMap">
+    select * from role where is_admin = 0;
+  </select>
 </mapper>

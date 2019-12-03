@@ -18,4 +18,10 @@ public interface IUserService extends IBaseService<User> {
     User getUser(String userName, String password);
 
     boolean isExist(String userName);
+    /**
+     * @author bnc
+     *
+     */
+
+    void giveCommonRole(long uId);
 }

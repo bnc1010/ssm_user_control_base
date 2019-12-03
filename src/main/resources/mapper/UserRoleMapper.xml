@@ -12,4 +12,8 @@
   <select id="getRoleIdOfByUserId" resultType="Integer">
     select r_id from user_role WHERE u_id = #{userId}
   </select>
+
+  <insert id="insertUserRole">
+    insert into user_role values(#{userId}, #{roleId});
+  </insert>
 </mapper>
