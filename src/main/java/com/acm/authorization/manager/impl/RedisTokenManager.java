@@ -40,7 +40,7 @@ public class RedisTokenManager implements TokenManager {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         //时间戳
         String timestamp = SDF.format(new Date());
-        //token => authorityCode_userId_timestamp_uuid;
+        //token => userId_timestamp_uuid_authorityCode;
         String token = userId + "_" + timestamp + "_" + uuid + "_" + authorityCode;
         TokenModel model = new TokenModel(userId, uuid, timestamp, authorityCode);
         //存储到redis并设置过期时间(有效期为2个小时)

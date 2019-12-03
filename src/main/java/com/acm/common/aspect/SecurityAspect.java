@@ -59,7 +59,7 @@ public class SecurityAspect {
         if (requestUrl.getPath().contains("swagger")) {
             return pjp.proceed();
         }
-        if (requestUrl.getPath().contains("api/")) {
+        if (requestUrl.getPath().contains("api-docs")) {
             return pjp.proceed();
         }
         // ************************************************************************************************************

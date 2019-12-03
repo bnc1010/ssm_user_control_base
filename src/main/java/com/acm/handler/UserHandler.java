@@ -32,7 +32,7 @@ public class UserHandler extends BaseHandler {
     private static final Logger LOGGER = Logger.getLogger(UserHandler.class);
 
     @ApiOperation(value = "查询列表", notes = "可选参数：pageNum,pageSize")
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/all", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean getUserList(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
@@ -57,7 +57,7 @@ public class UserHandler extends BaseHandler {
 
     @ApiOperation(value = "根据id查询指定的User", notes = "参数:uId")
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = RequestMethod.POST)
     public ResultBean getUser(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -73,7 +73,7 @@ public class UserHandler extends BaseHandler {
 
     @ApiOperation(value = "新增User", notes = "参数:userName,password")
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResultBean add(@RequestBody @Valid User user, BindingResult result) {
         ResultBean resultBean = new ResultBean();
 
@@ -105,7 +105,7 @@ public class UserHandler extends BaseHandler {
 
     @ApiOperation(value = "更新指定的User", notes = "uId,需要更改的字段")
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResultBean update(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
@@ -126,7 +126,7 @@ public class UserHandler extends BaseHandler {
 
     @ApiOperation(value = "根据id物理删除指定的User，需谨慎！", notes = "参数：uId")
     @ResponseBody
-    @RequestMapping(value = "/", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultBean delete(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
