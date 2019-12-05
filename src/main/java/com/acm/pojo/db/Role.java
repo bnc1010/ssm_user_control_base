@@ -18,8 +18,8 @@ public class Role {
     private String roleName;
 
 
-    @Column(name = "is_admin")
-    private int isAdmin;
+    @Column(name = "r_type")
+    private String rType;
     /**
      * 获取主键
      *
@@ -57,12 +57,12 @@ public class Role {
     }
 
 
-    public int getIsAdmin() {
-        return isAdmin;
+    public String getRType() {
+        return rType;
     }
 
-    public void setIsAdmin(int isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setRType(String rType) {
+        this.rType = rType;
     }
 
     @Override

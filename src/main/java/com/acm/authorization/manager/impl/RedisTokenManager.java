@@ -35,14 +35,14 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
-    public TokenModel createToken(long userId, String authorityCode) {
+    public TokenModel createToken(long userId, String permissionCode, String roleCode) {
         //uuid
         String uuid = UUID.randomUUID().toString().replace("-", "");
         //时间戳
         String timestamp = SDF.format(new Date());
-        //token => userId_timestamp_uuid_authorityCode;
-        String token = userId + "_" + timestamp + "_" + uuid + "_" + authorityCode;
-        TokenModel model = new TokenModel(userId, uuid, timestamp, authorityCode);
+        //token => userId_timestamp_uuid_permissionCode_roleCode;
+        String token = userId + "_" + timestamp + "_" + uuid + "_" + permissionCode + "_" + roleCode;
+        TokenModel model = new TokenModel(userId, uuid, timestamp, permissionCode, roleCode);
         //存储到redis并设置过期时间(有效期为2个小时)
         redis.boundValueOps(userId).set(Base64Util.encodeData(token), Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return model;
@@ -54,7 +54,7 @@ public class RedisTokenManager implements TokenManager {
             return null;
         }
         String[] param = authentication.split("_");
-        if (param.length != 4) {
+        if (param.length != 5) {
             return null;
         }
 
@@ -62,8 +62,9 @@ public class RedisTokenManager implements TokenManager {
         long userId = Long.parseLong(param[0]);
         String timestamp = param[1];
         String uuid = param[2];
-        String authorityCode = param[3];
-        return new TokenModel(userId, uuid, timestamp, authorityCode);
+        String permissionCode = param[3];
+        String roleCode = param[4];
+        return new TokenModel(userId, uuid, timestamp, permissionCode, roleCode);
     }
 
     @Override

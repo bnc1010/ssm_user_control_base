@@ -1,24 +1,18 @@
-package com.acm.pojo.db;
+package com.acm.pojo.vo;
 
-import javax.persistence.*;
 
-public class Permission {
-    /**
-     * 主键
-     */
-    @Id
-    @Column(name = "p_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PermissionVO {
     private Integer pId;
 
-    @Column(name = "p_url")
     private String pUrl;
 
-    @Column(name = "p_name")
     private String pName;
 
-    @Column(name = "p_type")
-    private String pType;
+    private String pCode;
+
+    private Integer pageNum;
+
+    private Integer pageSize;
 
     /**
      * 获取主键
@@ -66,24 +60,37 @@ public class Permission {
         this.pName = pName;
     }
 
-    public String getpType() {
-        return pType;
+    public String getpCode() {
+        return pCode;
     }
 
-    public void setpType(String pType) {
-        this.pType = pType;
+    public void setpCode(String pCode) {
+        this.pCode = pCode;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", pId=").append(pId);
-        sb.append(", pUrl=").append(pUrl);
-        sb.append(", pName=").append(pName);
-        sb.append("]");
-        return sb.toString();
+        return "UserVO{" +
+                "pId=" + pId +
+                ", pUrl='" + pUrl + '\'' +
+                ", pName=" + pName +
+                ", pcode=" + pCode +
+                '}';
     }
 }

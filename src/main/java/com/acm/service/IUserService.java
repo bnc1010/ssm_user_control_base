@@ -2,6 +2,8 @@ package com.acm.service;
 
 import com.acm.pojo.db.User;
 
+import java.util.List;
+
 /**
  * User的service接口层
  * @author Leeyom Wang
@@ -24,4 +26,6 @@ public interface IUserService extends IBaseService<User> {
      */
 
     void giveCommonRole(long uId);
+
+    void grantPrivileges(int uId, List<Integer> rIds);
 }

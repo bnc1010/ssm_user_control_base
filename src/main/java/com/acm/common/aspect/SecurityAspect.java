@@ -81,7 +81,7 @@ public class SecurityAspect {
         }
 
         //检查权限
-        if (!authorityManager.checkAuthority(tokenModel.getAuthorityCode(), requestUrl.getPath())){
+        if (!authorityManager.checkAuthority(tokenModel.getPermissionCode(), requestUrl.getPath())){
             String message = tokenModel.getUserId() + "try to enter " + requestUrl.getPath() + "without permission";
             LOGGER.debug("message : " + message);
             throw new AuthorityException("无权访问");

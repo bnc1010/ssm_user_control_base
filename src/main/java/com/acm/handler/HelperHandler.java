@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class HelperHandler {
     private static final Logger LOGGER = Logger.getLogger(UserHandler.class);
 
-    @ApiOperation(value = "查询列表")
+    @ApiOperation(value = "查询是否有权进入管理界面")
     @RequestMapping(value = "/checkAdmin", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean getUserList(@RequestBody UserVO requestUser) {

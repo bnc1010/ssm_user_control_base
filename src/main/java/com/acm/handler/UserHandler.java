@@ -1,6 +1,9 @@
 package com.acm.handler;
 
+import com.acm.authorization.manager.TokenManager;
+import com.acm.authorization.model.TokenModel;
 import com.acm.common.constant.StatusCode;
+import com.acm.common.utils.Base64Util;
 import com.acm.pojo.db.User;
 import com.acm.pojo.vo.ResultBean;
 import com.acm.pojo.vo.UserVO;
@@ -9,12 +12,14 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -139,6 +144,48 @@ public class UserHandler extends BaseHandler {
         }
         return resultBean;
     }
+
+    @Autowired
+    private TokenManager tokenManager;
+
+    @ApiOperation(value = "根据uid赋角色", notes = "参数：uId，roleCode数组,token")
+    @ResponseBody
+    @RequestMapping(value = "/grant", method = RequestMethod.POST)
+    public ResultBean grantUser(@RequestBody UserVO requestUser) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String tk = requestUser.getToken();
+            TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
+            String [] rus = tokenModel.getRoleCode().split("&");
+            List<Integer> rIds = new ArrayList<>();
+
+            for (String rs:requestUser.getrCodes()){
+                boolean ff = false;
+                for (String au:rus){
+                    if (rs.equals(au)){
+                        rIds.add(Integer.parseInt(rs.substring(1)));
+                        ff = true;
+                        break;
+                    }
+                }
+                if (!ff){
+                    resultBean.setCode(StatusCode.HTTP_FAILURE);
+                    resultBean.setMsg("存在越权行为！");
+                    return resultBean;
+                }
+            }
+            userService.grantPrivileges(requestUser.getuId(),rIds);
+
+
+        } catch (Exception e) {
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg("Grant User failed！");
+            e.printStackTrace();
+            LOGGER.error("赋角色失败 id = " + requestUser.getuId(), e);
+        }
+        return resultBean;
+    }
+
 
 }
 

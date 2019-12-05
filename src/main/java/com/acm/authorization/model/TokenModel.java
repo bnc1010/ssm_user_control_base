@@ -25,13 +25,16 @@ public class TokenModel {
     /**
      * 权限码
      */
-    private String authorityCode;
+    private String permissionCode;
 
-    public TokenModel(long userId, String uuid, String timestamp, String authorityCode) {
+    private String roleCode;
+
+    public TokenModel(long userId, String uuid, String timestamp, String permissionCode, String roleCode) {
         this.userId = userId;
         this.uuid = uuid;
         this.timestamp = timestamp;
-        this.authorityCode = authorityCode;
+        this.permissionCode = permissionCode;
+        this.roleCode = roleCode;
     }
 
     public long getUserId() {
@@ -58,15 +61,23 @@ public class TokenModel {
         this.timestamp = timestamp;
     }
 
-    public String getAuthorityCode() {
-        return authorityCode;
+    public String getPermissionCode() {
+        return permissionCode;
     }
 
-    public void setAuthorityCode(String authorityCode) {
-        this.authorityCode = authorityCode;
+    public void setPermissionCode(String permissionCode) {
+        this.permissionCode = permissionCode;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
     public String getToken() {
-        return userId + "_" + timestamp + "_" + uuid + "_" + authorityCode;
+        return userId + "_" + timestamp + "_" + uuid + "_" + permissionCode + "_" + roleCode;
     }
 }

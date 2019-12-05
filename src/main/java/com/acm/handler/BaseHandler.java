@@ -1,5 +1,7 @@
 package com.acm.handler;
 
+import com.acm.service.IPermissionService;
+import com.acm.service.IRoleService;
 import com.acm.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,5 +16,11 @@ public class BaseHandler {
 
     @Autowired
     IUserService userService;
+
+    @Autowired
+    IRoleService roleService;
+
+    @Autowired
+    IPermissionService permissionService;
 
 }

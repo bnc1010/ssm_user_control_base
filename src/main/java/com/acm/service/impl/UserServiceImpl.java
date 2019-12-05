@@ -24,7 +24,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     @Autowired
     UserMapper userMapper;
 
-
     @Autowired
     RoleMapper roleMapper;
 
@@ -52,6 +51,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
         List<Role> commonRoles = roleMapper.getCommonRole();
         for (Role role : commonRoles){
             userRoleMapper.insertUserRole(uId, role.getrId());
+        }
+    }
+
+    public void grantPrivileges(int uId, List<Integer> rIds) {
+        for (int rId : rIds){
+            UserRole userRole = new UserRole();
+            userRole.setrId(rId);
+            userRole.setuId(uId);
+            try {
+                userRoleMapper.insert(userRole);
+            }
+            catch (Exception e){
+
+            }
         }
     }
 }

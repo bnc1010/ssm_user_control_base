@@ -47,6 +47,8 @@ public class UserVO {
 
     private String password;
 
+    private String [] rCodes;
+
     public Integer getuId() {
         return uId;
     }
@@ -118,6 +120,15 @@ public class UserVO {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
+    public String[] getrCodes() {
+        return rCodes;
+    }
+
+    public void setrCodes(String[] rCodes) {
+        this.rCodes = rCodes;
+    }
+
 
     @Override
     public String toString() {
