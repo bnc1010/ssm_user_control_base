@@ -11,4 +11,6 @@ import java.util.List;
 public interface RolePermissionMapper extends MyMapper<RolePermission> {
 
     List<Integer> getPermissionIdOfByRoleId(@Param("roleId") int roleId);
+
+    void robPermission(@Param("pId") int pId);
 }

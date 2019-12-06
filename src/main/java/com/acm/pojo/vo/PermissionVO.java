@@ -8,11 +8,13 @@ public class PermissionVO {
 
     private String pName;
 
-    private String pCode;
+    private String pType;
 
     private Integer pageNum;
 
     private Integer pageSize;
+
+    private String token;
 
     /**
      * 获取主键
@@ -53,6 +55,8 @@ public class PermissionVO {
         return pName;
     }
 
+
+
     /**
      * @param pName
      */
@@ -60,12 +64,12 @@ public class PermissionVO {
         this.pName = pName;
     }
 
-    public String getpCode() {
-        return pCode;
+    public String getpType() {
+        return pType;
     }
 
-    public void setpCode(String pCode) {
-        this.pCode = pCode;
+    public void setpType(String pType) {
+        this.pType = pType;
     }
 
     public Integer getPageNum() {
@@ -84,13 +88,21 @@ public class PermissionVO {
         this.pageSize = pageSize;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
     @Override
     public String toString() {
         return "UserVO{" +
                 "pId=" + pId +
                 ", pUrl='" + pUrl + '\'' +
                 ", pName=" + pName +
-                ", pcode=" + pCode +
+                ", pType=" + pType +
                 '}';
     }
 }

@@ -158,25 +158,37 @@ public class UserHandler extends BaseHandler {
             TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
             String [] rus = tokenModel.getRoleCode().split("&");
             List<Integer> rIds = new ArrayList<>();
-
-            for (String rs:requestUser.getrCodes()){
-                boolean ff = false;
-                for (String au:rus){
-                    if (rs.equals(au)){
-                        rIds.add(Integer.parseInt(rs.substring(1)));
-                        ff = true;
-                        break;
+            if (tokenModel.getRoleCode().contains("a1")){//系统管理员情况
+                for (String rs:requestUser.getrCodes()){
+                    int rr = Integer.parseInt(rs.substring(1));
+                    if (roleService.checkRoleExist(rr)){
+                        rIds.add(rr);
+                    }
+                    else{
+                        resultBean.setCode(StatusCode.HTTP_FAILURE);
+                        resultBean.setMsg("角色" + rs + "不存在!");
+                        return resultBean;
                     }
                 }
-                if (!ff){
-                    resultBean.setCode(StatusCode.HTTP_FAILURE);
-                    resultBean.setMsg("存在越权行为！");
-                    return resultBean;
+            }
+            else{
+                for (String rs:requestUser.getrCodes()){
+                    boolean ff = false;
+                    for (String au:rus){
+                        if (rs.equals(au)){
+                            rIds.add(Integer.parseInt(rs.substring(1)));
+                            ff = true;
+                            break;
+                        }
+                    }
+                    if (!ff){
+                        resultBean.setCode(StatusCode.HTTP_FAILURE);
+                        resultBean.setMsg("存在越权行为！");
+                        return resultBean;
+                    }
                 }
             }
             userService.grantPrivileges(requestUser.getuId(),rIds);
-
-
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg("Grant User failed！");

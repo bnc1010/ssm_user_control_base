@@ -30,22 +30,31 @@ import java.util.List;
 public class RoleHandler extends BaseHandler{
     private static final Logger LOGGER = Logger.getLogger(RoleHandler.class);
 
+    @Autowired
+    private TokenManager tokenManager;
+
     @ApiOperation(value = "查询列表")
     @RequestMapping(value = "all", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean getRoleList(@RequestBody RoleVO requestRole) {
         ResultBean resultBean = new ResultBean();
         try {
-            List<Role> roleList = null;
-            int pageNum = 1;
-            int pageSize = 10;
-            if (requestRole.getPageNum() != null && requestRole.getPageSize() != null){
-                pageNum = requestRole.getPageNum();
-                pageSize = requestRole.getPageSize();
+            String tk = requestRole.getToken();
+            TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
+            String [] aus = tokenModel.getRoleCode().split("&");
+            List<Role> roleList = new ArrayList<>();
+            if (tokenModel.getRoleCode().contains("a1")){
+                roleList = roleService.selectAll(1, 100000);
             }
-            roleList = roleService.selectAll(pageNum, pageSize);
+            else{
+                for (String au:aus){
+                    if (au.equals("ru:"))continue;
+                    Role role = roleService.selectByPrimaryKey(Integer.parseInt(au.substring(1)));
+                    roleList.add(role);
+                }
+            }
+
             resultBean.setData(roleList);
-            resultBean.setEtxra(new PageInfo<>(roleList));
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg("Request role list Failed！");
@@ -53,7 +62,6 @@ public class RoleHandler extends BaseHandler{
         }
         return resultBean;
     }
-
 
 
     @ApiOperation(value = "添加角色",notes ="参数：roleName角色名, rType角色类型")
@@ -92,8 +100,7 @@ public class RoleHandler extends BaseHandler{
         return resultBean;
     }
 
-    @Autowired
-    private TokenManager tokenManager;
+
 
     @ApiOperation(value = "给角色赋权限", notes = "参数：rId,权限码数组,token")
     @RequestMapping(value = "grant", method = RequestMethod.POST)

@@ -15,7 +15,7 @@
     select * from permission where p_id = #{pid}
   </select>
 
-  <select id="getPermissionByCode" resultMap="BaseResultMap">
-    select * from permission where p_code = #{pcode}
+  <select id="getIdByNameAndUrl" resultType="Integer">
+    select p_id from permission where p_name=#{pName} and p_url=#{pUrl};
   </select>
 </mapper>

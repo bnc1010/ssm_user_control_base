@@ -13,4 +13,8 @@
     select p_id from role_permission WHERE r_id = #{roleId}
   </select>
 
+  <delete id="robPermission">
+    delete from role_permission where p_id = #{pId};
+  </delete>
+
 </mapper>

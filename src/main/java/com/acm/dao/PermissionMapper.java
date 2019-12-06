@@ -9,6 +9,5 @@ import org.springframework.stereotype.Component;
 public interface PermissionMapper extends MyMapper<Permission> {
 
     Permission getPermissionById(@Param("pid") int pid);
-
-    Permission getPermissionByCode(@Param("pcode") String pcode);
+    int getIdByNameAndUrl(@Param("pName") String pName,@Param("pUrl") String pUrl);
 }

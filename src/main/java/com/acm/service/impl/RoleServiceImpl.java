@@ -35,4 +35,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
             }
         }
     }
+
+    @Override
+    public boolean checkRoleExist(int rId) {
+        return roleMapper.existsWithPrimaryKey(rId);
+    }
 }
