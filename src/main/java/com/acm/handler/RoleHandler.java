@@ -5,11 +5,10 @@ import com.acm.authorization.manager.TokenManager;
 import com.acm.authorization.model.TokenModel;
 import com.acm.common.constant.StatusCode;
 import com.acm.common.utils.Base64Util;
-import com.acm.dao.RoleMapper;
 import com.acm.pojo.db.Role;
+import com.acm.pojo.db.User;
 import com.acm.pojo.vo.ResultBean;
 import com.acm.pojo.vo.RoleVO;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
@@ -22,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Api(description = "角色管理", tags = "RoleHandler", basePath = "/system")
 @Controller
@@ -64,7 +65,7 @@ public class RoleHandler extends BaseHandler{
     }
 
 
-    @ApiOperation(value = "添加角色",notes ="参数：roleName角色名, rType角色类型")
+    @ApiOperation(value = "添加角色",notes ="参数：roleName角色名, rType角色类型，rRank")
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean addRole(@RequestBody RoleVO requestRole) {
@@ -73,6 +74,7 @@ public class RoleHandler extends BaseHandler{
             Role role = new Role();
             role.setRoleName(requestRole.getRoleName());
             role.setRType(requestRole.getrType());
+            role.setrRank(requestRole.getrRank());
             roleService.insert(role);
         }
         catch (Exception e){
@@ -90,6 +92,28 @@ public class RoleHandler extends BaseHandler{
     public ResultBean deleteRole(@RequestBody RoleVO requestRole) {
         ResultBean resultBean = new ResultBean();
         try {
+            Role role = roleService.selectByPrimaryKey(requestRole.getrId());
+            List<Integer> uIds = roleService.getUserIdByRoleId(role.getrId());
+
+            for (int uId : uIds){
+                User user = userService.selectByPrimaryKey(uId);
+                if (user.getuRank() >= role.getrRank()){
+                    List<Role> roles = roleService.getRoleByUserId(user.getuId());
+                    int minRank = 10000;
+                    for (Role _role : roles){
+                        if (_role.getrId().equals(role.getrId())){
+                            continue;
+                        }
+                        else{
+                            minRank = minRank > _role.getrRank() ? _role.getrRank() : minRank;
+                        }
+                    }
+                    if (minRank != role.getrRank()){
+                        userService.updateURank(user.getuId(), minRank);
+                    }
+                }
+            }
+            roleService.robRole(role.getrId());
             roleService.deleteByPrimaryKey(requestRole.getrId());
         }
         catch (Exception e){
@@ -137,4 +161,35 @@ public class RoleHandler extends BaseHandler{
         }
         return resultBean;
     }
+
+    @ApiOperation(value = "给角色去权限", notes = "参数：rId,权限码数组")
+    @RequestMapping(value = "/drop", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultBean drop(@RequestBody RoleVO requestRole) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Map map = new HashMap();
+            List<Integer> pIds = roleService.getPermissionIdByRoleId(requestRole.getrId());
+            for (int pid:pIds){
+                map.put(pid, true);
+            }
+            for (String rr : requestRole.getpCodes()){
+                if (!map.containsKey(Integer.parseInt(rr.substring(1)))){
+                    resultBean.setCode(StatusCode.HTTP_FAILURE);
+                    resultBean.setMsg("该角色没有权限，code:" + rr);
+                    return resultBean;
+                }
+            }
+            for (String rr : requestRole.getpCodes()){
+                roleService.deleteByRoleIdAndPermissionId(requestRole.getrId(), Integer.parseInt(rr.substring(1)));
+            }
+        }
+        catch (Exception e){
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg("drop permission of role Failed！");
+            LOGGER.error("去权限失败！", e);
+        }
+        return resultBean;
+    }
+
 }

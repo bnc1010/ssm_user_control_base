@@ -35,6 +35,8 @@ public class UserVO {
      */
     private Integer age;
 
+
+    private Integer uRank;
     /**
      * token
      */
@@ -129,6 +131,13 @@ public class UserVO {
         this.rCodes = rCodes;
     }
 
+    public void setuRank(Integer uRank) {
+        this.uRank = uRank;
+    }
+
+    public Integer getuRank() {
+        return uRank;
+    }
 
     @Override
     public String toString() {

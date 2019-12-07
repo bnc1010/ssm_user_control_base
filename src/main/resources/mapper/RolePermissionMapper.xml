@@ -17,4 +17,12 @@
     delete from role_permission where p_id = #{pId};
   </delete>
 
+  <delete id="deleteByRoleId">
+    delete from role_permission where r_id = #{rId};
+  </delete>
+
+  <delete id="deleteByRoleIdAndPermissionId">
+    delete from role_permission where r_id=#{rId} and p_id=#{pId};
+  </delete>
+
 </mapper>

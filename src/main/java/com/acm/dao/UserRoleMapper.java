@@ -14,4 +14,11 @@ public interface UserRoleMapper extends MyMapper<UserRole> {
 
     void insertUserRole(@Param("userId") long userId, @Param("roleId") int roleId);
 
+    void robRole(@Param("rId") int rId);
+
+    List<Integer> getUserIdByRoleId(@Param("rId") int rId);
+
+    void deleteByUserIdAndRoleId(@Param("uId") int uId, @Param("rId") int rId);
+
+
 }

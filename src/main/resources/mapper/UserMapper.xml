@@ -11,6 +11,7 @@
     <result column="birthday" property="birthday" jdbcType="DATE" />
     <result column="sex" property="sex" jdbcType="INTEGER" />
     <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="u_rank" property="uRank" jdbcType="INTEGER" />
   </resultMap>
 
   <!--根据用户名和密码获取用户信息-->
@@ -18,9 +19,17 @@
     select * from user WHERE user_name = #{userName} AND password = #{password}
   </select>
 
+  <select id="getUserById" resultMap="BaseResultMap">
+    select * from user WHERE u_id = #{uId};
+  </select>
+
   <!--判断用户名存不存在-->
   <select id="getUserByUserName" resultType="Integer">
     select count(*) from user WHERE user_name = #{userName}
   </select>
 
+
+  <update id="updateURank">
+    update user set u_rank = #{newRank} where u_id = #{uId};
+  </update>
 </mapper>

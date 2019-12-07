@@ -20,6 +20,9 @@ public class Role {
 
     @Column(name = "r_type")
     private String rType;
+
+    @Column(name = "r_rank")
+    private int rRank;
     /**
      * 获取主键
      *
@@ -63,6 +66,14 @@ public class Role {
 
     public void setRType(String rType) {
         this.rType = rType;
+    }
+
+    public int getrRank() {
+        return rRank;
+    }
+
+    public void setrRank(int rRank) {
+        this.rRank = rRank;
     }
 
     @Override

@@ -37,6 +37,13 @@ public class PermissionHandler extends BaseHandler{
         ResultBean resultBean = new ResultBean();
         try {
             String tk = requestPermission.getToken();
+            if (tk == null)
+            {
+                resultBean.setCode(StatusCode.HTTP_FAILURE);
+                resultBean.setMsg("token异常！");
+                return resultBean;
+            }
+//            System.out.println(Base64Util.decodeData(tk));
             TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
             String [] pus = tokenModel.getPermissionCode().split("&");
             List<Permission> permissionsList = new ArrayList<>();

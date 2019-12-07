@@ -16,4 +16,16 @@
   <insert id="insertUserRole">
     insert into user_role values(#{userId}, #{roleId});
   </insert>
+
+  <delete id="robRole">
+    delete from user_role where r_id = #{rId};
+  </delete>
+
+  <select id="getUserIdByRoleId" resultType="Integer">
+    select u_id from user_role where r_id = #{rId};
+  </select>
+
+  <delete id="deleteByUserIdAndRoleId">
+    delete from user_role where u_id=#{uId} and r_id=#{rId};
+  </delete>
 </mapper>

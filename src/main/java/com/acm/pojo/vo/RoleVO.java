@@ -26,6 +26,8 @@ public class RoleVO {
 
     private String token;
 
+    private Integer rRank;
+
     /**
      * 获取主键
      *
@@ -101,6 +103,14 @@ public class RoleVO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setrRank(Integer rRank) {
+        this.rRank = rRank;
+    }
+
+    public Integer getrRank() {
+        return rRank;
     }
 
     @Override

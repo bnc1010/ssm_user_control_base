@@ -13,4 +13,8 @@ public interface RolePermissionMapper extends MyMapper<RolePermission> {
     List<Integer> getPermissionIdOfByRoleId(@Param("roleId") int roleId);
 
     void robPermission(@Param("pId") int pId);
+
+    void deleteByRoleId(@Param("rId") int rId);
+
+    void deleteByRoleIdAndPermissionId(@Param("rId") int rId, @Param("pId") int pId);
 }

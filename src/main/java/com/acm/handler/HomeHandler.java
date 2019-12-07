@@ -7,6 +7,7 @@ import com.acm.common.annotation.IgnoreSecurity;
 import com.acm.common.constant.StatusCode;
 import com.acm.common.utils.Base64Util;
 import com.acm.common.utils.MD5Util;
+import com.acm.pojo.db.Role;
 import com.acm.pojo.db.User;
 import com.acm.pojo.vo.ResultBean;
 import com.acm.pojo.vo.UserVO;
@@ -15,6 +16,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 平台登录登出
@@ -121,6 +124,20 @@ public class HomeHandler extends BaseHandler {
             User user = new User();
             user.setUserName(requestUser.getUserName());
             user.setPassword(MD5Util.encrypt(requestUser.getPassword()));
+            List<Role> commonRole = null;
+            int rank = 10000;
+            try {
+                commonRole = roleService.getCommonRole();
+                for (Role role : commonRole){
+                    rank = rank > role.getrRank() ? role.getrRank() : rank;
+                }
+                user.setuRank(rank);
+            }
+            catch (Exception e){
+                resultBean.setCode(StatusCode.HTTP_FAILURE);
+                resultBean.setMsg("服务器异常！");
+                LOGGER.error("新增User失败！参数信息：User = " + user.toString(), e);
+            }
             try {
                 userService.insert(user);
             } catch (Exception e) {
@@ -130,7 +147,7 @@ public class HomeHandler extends BaseHandler {
             }
             User newUser = userService.getUser(user.getUserName(),user.getPassword());
             try{
-                userService.giveCommonRole(newUser.getuId());
+                userService.giveCommonRole(newUser.getuId(), commonRole);
             }
             catch (Exception e){
                 userService.deleteByPrimaryKey(newUser.getuId());

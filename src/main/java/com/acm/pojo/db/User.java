@@ -51,6 +51,9 @@ public class User {
     @Min(value = 18, message = "必须年满 18 岁！")
     private Integer age;
 
+
+    @Column(name = "u_rank")
+    private int uRank;
     /**
      * 获取主键
      * @return u_id - 主键
@@ -145,6 +148,14 @@ public class User {
      */
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public int getuRank() {
+        return uRank;
+    }
+
+    public void setuRank(int uRank) {
+        this.uRank = uRank;
     }
 
     @Override

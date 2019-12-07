@@ -41,15 +41,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     }
 
     @Override
+    public User getUser(long uId) {
+        return userMapper.getUserById(uId);
+    }
+
+    @Override
     public boolean isExist(String userName) {
 //        System.out.println(userName);
         return userMapper.getUserByUserName(userName) > 0;
     }
 
     @Override
-    public void giveCommonRole(long uId) {
-        List<Role> commonRoles = roleMapper.getCommonRole();
-        for (Role role : commonRoles){
+    public void giveCommonRole(long uId, List<Role> commonRole) {
+        for (Role role : commonRole){
             userRoleMapper.insertUserRole(uId, role.getrId());
         }
     }
@@ -66,5 +70,15 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
 
             }
         }
+    }
+
+    @Override
+    public void updateURank(int uId, int newRank) {
+        userMapper.updateURank(uId, newRank);
+    }
+
+    @Override
+    public void deleteByUserIdAndRoleId(int uId, int rId) {
+        userRoleMapper.deleteByUserIdAndRoleId(uId, rId);
     }
 }

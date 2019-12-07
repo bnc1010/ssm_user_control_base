@@ -1,5 +1,6 @@
 package com.acm.service;
 
+import com.acm.pojo.db.Role;
 import com.acm.pojo.db.User;
 
 import java.util.List;
@@ -19,13 +20,19 @@ public interface IUserService extends IBaseService<User> {
      */
     User getUser(String userName, String password);
 
+    User getUser(long uId);
+
     boolean isExist(String userName);
     /**
      * @author bnc
      *
      */
 
-    void giveCommonRole(long uId);
+    void giveCommonRole(long uId, List<Role> commonRole);
 
     void grantPrivileges(int uId, List<Integer> rIds);
+
+    void updateURank(int uId, int newRank);
+
+    void deleteByUserIdAndRoleId(int uId, int rId);
 }

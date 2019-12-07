@@ -8,6 +8,10 @@ public interface UserMapper extends MyMapper<User> {
 
     User getUser(@Param("userName") String userName, @Param("password") String password);
 
+    User getUserById(@Param("uId") long uId);
+
     int getUserByUserName(@Param("userName") String userName);
+
+    void updateURank(@Param("uId") long uId, @Param("newRank") int newRank);
 
 }
