@@ -7,4 +7,5 @@ public interface AuthorityManager {
 
     String [] getAuthorityCode(long userId);
 
+
 }

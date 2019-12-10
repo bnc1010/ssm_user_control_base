@@ -20,5 +20,5 @@ public interface UserRoleMapper extends MyMapper<UserRole> {
 
     void deleteByUserIdAndRoleId(@Param("uId") int uId, @Param("rId") int rId);
 
-
+    void deleteByUserId(@Param("uId") int uId);
 }

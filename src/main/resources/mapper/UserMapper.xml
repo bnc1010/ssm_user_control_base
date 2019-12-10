@@ -32,4 +32,8 @@
   <update id="updateURank">
     update user set u_rank = #{newRank} where u_id = #{uId};
   </update>
+
+  <update id="updatePassword">
+    update user set password=#{password} where u_id = #{uId};
+  </update>
 </mapper>

@@ -14,4 +14,5 @@ public interface UserMapper extends MyMapper<User> {
 
     void updateURank(@Param("uId") long uId, @Param("newRank") int newRank);
 
+    void updatePassword(@Param("uId") long uId, @Param("password") String password);
 }

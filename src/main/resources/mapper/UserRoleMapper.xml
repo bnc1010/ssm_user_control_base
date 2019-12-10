@@ -28,4 +28,8 @@
   <delete id="deleteByUserIdAndRoleId">
     delete from user_role where u_id=#{uId} and r_id=#{rId};
   </delete>
+
+  <delete id="deleteByUserId">
+    delete from user_role where u_id=#{uId};
+  </delete>
 </mapper>

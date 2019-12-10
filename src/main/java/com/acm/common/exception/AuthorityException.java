@@ -8,11 +8,11 @@ public class AuthorityException extends RuntimeException {
         this.msg = msg;
     }
 
-    public String getMsg() {
+    public String getMessage() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    public void setMessage(String msg) {
         this.msg = msg;
     }
 }

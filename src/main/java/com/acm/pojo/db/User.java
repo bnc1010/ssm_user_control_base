@@ -47,8 +47,8 @@ public class User {
     /**
      * 年龄
      */
-    @Max(value = 100, message = "年龄不能大于 100 岁")
-    @Min(value = 18, message = "必须年满 18 岁！")
+    @Max(value = 150, message = "年龄不能大于 150 岁")
+    @Min(value = 0, message = "年龄不能小于 0 岁！")
     private Integer age;
 
 

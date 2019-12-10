@@ -4,6 +4,7 @@ import com.acm.authorization.manager.TokenManager;
 import com.acm.authorization.model.TokenModel;
 import com.acm.common.constant.StatusCode;
 import com.acm.common.utils.Base64Util;
+import com.acm.common.utils.MD5Util;
 import com.acm.pojo.db.Role;
 import com.acm.pojo.db.User;
 import com.acm.pojo.vo.ResultBean;
@@ -85,7 +86,7 @@ public class UserHandler extends BaseHandler {
 
         if (userService.isExist(user.getUserName())){
             resultBean.setCode(StatusCode.HTTP_FAILURE);
-            resultBean.setData("该用户名已注册");
+            resultBean.setMsg("该用户名已注册");
         }
         else {
             StringBuilder errorMsg = new StringBuilder("");
@@ -95,10 +96,11 @@ public class UserHandler extends BaseHandler {
                     errorMsg = errorMsg.append(error.getCode()).append("-").append(error.getDefaultMessage()).append(";");
                 }
                 resultBean.setCode(StatusCode.HTTP_FAILURE);
-                resultBean.setData(errorMsg.toString());
+                resultBean.setMsg(errorMsg.toString());
                 return resultBean;
             }
             try {
+                user.setPassword(MD5Util.encrypt(user.getPassword()));
                 userService.insert(user);
             } catch (Exception e) {
                 resultBean.setCode(StatusCode.HTTP_FAILURE);
@@ -115,31 +117,36 @@ public class UserHandler extends BaseHandler {
     public ResultBean update(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
+            String tk = requestUser.getToken();
+            userOperationService.checkOperationToUserByToken(tk, requestUser.getuId());
             User oldUser = userService.selectByPrimaryKey(requestUser.getuId());
             oldUser.setAge(requestUser.getAge());
             oldUser.setBirthday(requestUser.getBirthday());
-            oldUser.setPassword(requestUser.getPassword());
             oldUser.setSex(requestUser.getSex());
-            oldUser.setUserName(requestUser.getUserName());
             userService.updateByPrimaryKey(oldUser);
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
-            resultBean.setMsg("Update User failed！");
+            resultBean.setMsg(e.getMessage());
             LOGGER.error("更新失败！参数信息：id = " + requestUser.getuId() + ",User = " + requestUser.toString(), e);
         }
         return resultBean;
     }
 
-    @ApiOperation(value = "根据id物理删除指定的Role，需谨慎！", notes = "参数：uId")
+
+
+    @ApiOperation(value = "根据id物理删除指定的Role，需谨慎！", notes = "参数：uId,token")
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultBean delete(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
+            String tk = requestUser.getToken();
+            userOperationService.checkOperationToUserByToken(tk, requestUser.getuId());
+            userService.deleteByUserId(requestUser.getuId());
             userService.deleteByPrimaryKey(requestUser.getuId());
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
-            resultBean.setMsg("Delete User failed！");
+            resultBean.setMsg(e.getMessage());
             e.printStackTrace();
             LOGGER.error("删除失败！参数信息：id = " + requestUser.getuId(), e);
         }
@@ -167,13 +174,11 @@ public class UserHandler extends BaseHandler {
             int minRank = 10000;
             User nowUser = userService.getUser(tokenModel.getUserId());
             User targetUser = userService.getUser(requestUser.getuId());
-
             if (targetUser == null){
                 resultBean.setCode(StatusCode.HTTP_FAILURE);
                 resultBean.setMsg("操作对象不存在!");
                 return resultBean;
             }
-
 
             if (tokenModel.getRoleCode().contains("a1")){//系统管理员情况
                 for (String rs:requestUser.getrCodes()){
@@ -196,7 +201,6 @@ public class UserHandler extends BaseHandler {
                     return resultBean;
                 }
                 else {
-
                     for (String rs:requestUser.getrCodes()){
                         boolean ff = false;
                         for (String au:rus){
@@ -249,7 +253,7 @@ public class UserHandler extends BaseHandler {
                 return resultBean;
             }
             TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
-            int minRank = 10000;
+
             User nowUser = userService.getUser(tokenModel.getUserId());
             User targetUser = userService.getUser(requestUser.getuId());
 
@@ -264,6 +268,7 @@ public class UserHandler extends BaseHandler {
                 resultBean.setMsg("无权对该用户操作！");
                 return resultBean;
             }
+            int minRank = 10000;
             Map map = new HashMap();
             List<Role> roles = roleService.getRoleByUserId(targetUser.getuId());
             for (String rs : requestUser.getrCodes()){
@@ -301,5 +306,25 @@ public class UserHandler extends BaseHandler {
         }
         return resultBean;
     }
+
+    @ApiOperation(value = "根据uId重置密码", notes = "参数：uId,token")
+    @ResponseBody
+    @RequestMapping(value = "/reset", method = RequestMethod.POST)
+    public ResultBean RestPassword(@RequestBody UserVO requestUser) {
+        ResultBean resultBean = new ResultBean();
+        try{
+            String tk = requestUser.getToken();
+            userOperationService.checkOperationToUserByToken(tk, requestUser.getuId());
+            userService.resetPassword(requestUser.getuId(), MD5Util.encrypt("123456"));
+        }
+        catch (Exception e){
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg(e.getMessage());
+            e.printStackTrace();
+            LOGGER.error("去角色失败 id = " + requestUser.getuId(), e);
+        }
+        return resultBean;
+    }
+
 }
 

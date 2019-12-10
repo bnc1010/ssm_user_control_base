@@ -35,4 +35,8 @@ public interface IUserService extends IBaseService<User> {
     void updateURank(int uId, int newRank);
 
     void deleteByUserIdAndRoleId(int uId, int rId);
+
+    void deleteByUserId(int uId);
+
+    void resetPassword(int uId, String password);
 }

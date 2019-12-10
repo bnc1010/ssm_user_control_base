@@ -81,4 +81,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements IUserServi
     public void deleteByUserIdAndRoleId(int uId, int rId) {
         userRoleMapper.deleteByUserIdAndRoleId(uId, rId);
     }
+
+    @Override
+    public void deleteByUserId(int uId) {
+        userRoleMapper.deleteByUserId(uId);
+    }
+
+    @Override
+    public void resetPassword(int uId, String password) {
+        userMapper.updatePassword(uId, password);
+    }
 }
