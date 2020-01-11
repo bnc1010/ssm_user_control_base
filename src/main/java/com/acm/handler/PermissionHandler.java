@@ -8,6 +8,7 @@ import com.acm.common.utils.Base64Util;
 import com.acm.pojo.db.Permission;
 import com.acm.pojo.vo.PermissionVO;
 import com.acm.pojo.vo.ResultBean;
+import com.acm.pojo.vo.RoleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
@@ -37,13 +38,7 @@ public class PermissionHandler extends BaseHandler{
         ResultBean resultBean = new ResultBean();
         try {
             String tk = requestPermission.getToken();
-            if (tk == null)
-            {
-                resultBean.setCode(StatusCode.HTTP_FAILURE);
-                resultBean.setMsg("token异常！");
-                return resultBean;
-            }
-//            System.out.println(Base64Util.decodeData(tk));
+            userOperationService.checkTokenNotEmpty(requestPermission.getToken());
             TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
             String [] pus = tokenModel.getPermissionCode().split("&");
             List<Permission> permissionsList = new ArrayList<>();
@@ -57,11 +52,32 @@ public class PermissionHandler extends BaseHandler{
             resultBean.setData(permissionsList);
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
-            resultBean.setMsg("Request permission list Failed！");
+            resultBean.setMsg(e.getMessage());
             LOGGER.error("查询列表失败！", e);
         }
         return resultBean;
     }
+
+    @ApiOperation(value = "查询角色拥有的权限", notes = "参数：token")
+    @RequestMapping(value = "get", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultBean getPermissionByRoleId(@RequestBody RoleVO requestRole) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String tk = requestRole.getToken();
+            userOperationService.checkTokenNotEmpty(requestRole.getToken());
+            TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
+            List permissions = roleService.getPermissionIdByRoleId(requestRole.getrId());
+            resultBean.setData(permissions);
+        } catch (Exception e) {
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg("Request permission Failed！");
+            LOGGER.error("查询失败" + requestRole.getrId(), e);
+        }
+        return resultBean;
+    }
+
+
 
     @ApiOperation(value = "添加权限",notes ="参数：pName,pUrl,pType,token。添加权限后系统管理员角色权限增加，将更新token，回传一个新token")
     @RequestMapping(value = "add", method = RequestMethod.POST)

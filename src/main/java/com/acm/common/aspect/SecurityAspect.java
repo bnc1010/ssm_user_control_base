@@ -73,7 +73,7 @@ public class SecurityAspect {
         String authentication = request.getHeader(Constants.DEFAULT_TOKEN_NAME);
         TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(authentication));
 
-        // 检查 token 有效性(检查是否登录)
+        // 检查有效性(检查是否登录)
         if (!tokenManager.checkToken(tokenModel)) {
             String message = "token " + Base64Util.decodeData(authentication) + " is invalid！！！";
             LOGGER.debug("message : " + message);

@@ -23,6 +23,8 @@ public class RoleVO {
      */
     private String [] pCodes;
 
+    private Integer [] pIds;
+
 
     private String token;
 
@@ -111,6 +113,14 @@ public class RoleVO {
 
     public Integer getrRank() {
         return rRank;
+    }
+
+    public void setpIds(Integer[] pIds) {
+        this.pIds = pIds;
+    }
+
+    public Integer[] getpIds() {
+        return pIds;
     }
 
     @Override

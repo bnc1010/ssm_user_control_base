@@ -37,6 +37,8 @@ public class UserVO {
 
 
     private Integer uRank;
+
+    private Integer [] rIds;
     /**
      * token
      */
@@ -137,6 +139,14 @@ public class UserVO {
 
     public Integer getuRank() {
         return uRank;
+    }
+
+    public Integer [] getrIds() {
+        return rIds;
+    }
+
+    public void setrIds(Integer [] rIds) {
+        this.rIds = rIds;
     }
 
     @Override

@@ -25,4 +25,6 @@
     delete from role_permission where r_id=#{rId} and p_id=#{pId};
   </delete>
 
+
+
 </mapper>

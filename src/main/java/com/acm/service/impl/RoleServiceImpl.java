@@ -64,12 +64,17 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements IRoleServi
 
     @Override
     public List<Role> getRoleByUserId(long uId) {
-        List<Integer> rIds = userRoleMapper.getRoleIdOfByUserId(uId);
+        List<Integer> rIds = getRoleIdByUserId(uId);
         List<Role> roles = new ArrayList<>();
         for (int rId : rIds){
             roles.add(roleMapper.selectByPrimaryKey(rId));
         }
         return roles;
+    }
+
+    @Override
+    public List<Integer> getRoleIdByUserId(long uId) {
+        return userRoleMapper.getRoleIdOfByUserId(uId);
     }
 
     @Override

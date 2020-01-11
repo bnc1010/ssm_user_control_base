@@ -137,11 +137,14 @@ public class RoleHandler extends BaseHandler{
             String [] aus = tokenModel.getPermissionCode().split("&");
 
             List<Integer> pIds = new ArrayList<>();
-            for (String rs:requestRole.getpCodes()){
+            for (Integer rs:requestRole.getpIds()){
                 boolean ff = false;
                 for (String au:aus){
-                    if (rs.equals(au)){
-                        pIds.add(Integer.parseInt(rs.substring(1)));
+                    if (au.equals("au:")){
+                        continue;
+                    }
+                    if (rs.equals(Integer.parseInt(au.substring(1)))){
+                        pIds.add(rs);
                         ff = true;
                         break;
                     }
@@ -162,7 +165,7 @@ public class RoleHandler extends BaseHandler{
         return resultBean;
     }
 
-    @ApiOperation(value = "给角色去权限", notes = "参数：rId,权限码数组")
+    @ApiOperation(value = "给角色去权限", notes = "参数：rId,权限id")
     @RequestMapping(value = "/drop", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean drop(@RequestBody RoleVO requestRole) {
@@ -173,15 +176,15 @@ public class RoleHandler extends BaseHandler{
             for (int pid:pIds){
                 map.put(pid, true);
             }
-            for (String rr : requestRole.getpCodes()){
-                if (!map.containsKey(Integer.parseInt(rr.substring(1)))){
+            for (int rr : requestRole.getpIds()){
+                if (!map.containsKey(rr)){
                     resultBean.setCode(StatusCode.HTTP_FAILURE);
-                    resultBean.setMsg("该角色没有权限，code:" + rr);
+                    resultBean.setMsg("该角色没有权限，permissionId:" + rr);
                     return resultBean;
                 }
             }
-            for (String rr : requestRole.getpCodes()){
-                roleService.deleteByRoleIdAndPermissionId(requestRole.getrId(), Integer.parseInt(rr.substring(1)));
+            for (int rr : requestRole.getpIds()){
+                roleService.deleteByRoleIdAndPermissionId(requestRole.getrId(), rr);
             }
         }
         catch (Exception e){

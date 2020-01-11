@@ -111,6 +111,25 @@ public class UserHandler extends BaseHandler {
         return resultBean;
     }
 
+    @ApiOperation(value = "根据id查询指定的User", notes = "参数:uId")
+    @ResponseBody
+    @RequestMapping(value = "/roles", method = RequestMethod.POST)
+    public ResultBean getUserRole(@RequestBody UserVO requestUser) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            String tk = requestUser.getToken();
+            userOperationService.checkOperationToUserByToken(tk, requestUser.getuId());
+            List<Integer> rIds = roleService.getRoleIdByUserId(requestUser.getuId());
+            resultBean.setData(rIds);
+        } catch (Exception e) {
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg(e.getMessage());
+            LOGGER.error("查询指定的User失败！参数信息：id = " + requestUser.getuId(), e);
+        }
+        return resultBean;
+    }
+
+
     @ApiOperation(value = "更新指定的User", notes = "uId,需要更改的字段")
     @ResponseBody
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -181,8 +200,8 @@ public class UserHandler extends BaseHandler {
             }
 
             if (tokenModel.getRoleCode().contains("a1")){//系统管理员情况
-                for (String rs:requestUser.getrCodes()){
-                    Role role = roleService.selectByPrimaryKey(Integer.parseInt(rs.substring(1)));
+                for (Integer rs:requestUser.getrIds()){
+                    Role role = roleService.selectByPrimaryKey(rs);
                     if (role != null){
                         minRank = minRank > role.getrRank() ? role.getrRank() : minRank;
                         rIds.add(role.getrId());
@@ -201,11 +220,14 @@ public class UserHandler extends BaseHandler {
                     return resultBean;
                 }
                 else {
-                    for (String rs:requestUser.getrCodes()){
+                    for (Integer rs:requestUser.getrIds()){
                         boolean ff = false;
                         for (String au:rus){
-                            if (rs.equals(au)){
-                                Role role = roleService.selectByPrimaryKey(Integer.parseInt(rs.substring(1)));
+                            if (au.equals("ru:")){
+                                continue;
+                            }
+                            if (rs.equals(Integer.parseInt(au.substring(1)))){
+                                Role role = roleService.selectByPrimaryKey(rs);
                                 if (role.getrRank() > nowUser.getuRank()){
                                     rIds.add(role.getrId());
                                     minRank = minRank > role.getrRank() ? role.getrRank() : minRank;
@@ -271,10 +293,10 @@ public class UserHandler extends BaseHandler {
             int minRank = 10000;
             Map map = new HashMap();
             List<Role> roles = roleService.getRoleByUserId(targetUser.getuId());
-            for (String rs : requestUser.getrCodes()){
+            for (Integer rs : requestUser.getrIds()){
                 boolean ff = false;
                 for (Role role : roles){
-                    if (Integer.parseInt(rs.substring(1)) == role.getrId()){
+                    if (rs.equals(role.getrId())){
                         ff = true;
                         map.put(role.getrId(),true);
                         break;
@@ -294,8 +316,8 @@ public class UserHandler extends BaseHandler {
             if (minRank != targetUser.getuRank()){
                 userService.updateURank(targetUser.getuId(), minRank);
             }
-            for (String rs : requestUser.getrCodes()){
-                userService.deleteByUserIdAndRoleId(targetUser.getuId(), Integer.parseInt(rs.substring(1)));
+            for (Integer rs : requestUser.getrIds()){
+                userService.deleteByUserIdAndRoleId(targetUser.getuId(), rs);
             }
         }
         catch (Exception e){

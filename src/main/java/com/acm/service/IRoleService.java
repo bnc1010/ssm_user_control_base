@@ -18,6 +18,8 @@ public interface IRoleService extends IBaseService<Role>{
 
     List<Role> getRoleByUserId(long uId);
 
+    List<Integer> getRoleIdByUserId(long uId);
+
     List<Integer> getPermissionIdByRoleId(int rId);
 
     void deleteByRoleIdAndPermissionId(int rId,int pId);

@@ -49,4 +49,12 @@ public class UserOperationServiceImpl implements IUserOperationService {
 
         return true;
     }
+
+    @Override
+    public boolean checkTokenNotEmpty(String token) {
+        if (token == null){
+            throw new AuthorityException("token为空");
+        }
+        return true;
+    }
 }
