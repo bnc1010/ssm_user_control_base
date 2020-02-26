@@ -73,7 +73,6 @@ public class HomeHandler extends BaseHandler {
                 userVO.setAge(user.getAge());
                 userVO.setBirthday(user.getBirthday());
                 userVO.setSex(user.getSex());
-                //将token返回给客户端
                 userVO.setToken(Base64Util.encodeData(token.getToken()));
                 resultBean.setData(userVO);
             }

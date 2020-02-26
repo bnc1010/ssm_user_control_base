@@ -25,4 +25,9 @@ public class PermissionServiceImpl extends BaseServiceImpl<Permission> implement
     public void robPermission(int pId) {
         rolePermissionMapper.robPermission(pId);
     }
+
+    @Override
+    public void insertPermission(String pName, String pUrl, String pType) {
+        permissionMapper.insertPermission(pName,pUrl,pType);
+    }
 }

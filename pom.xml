@@ -238,7 +238,7 @@
     </dependencies>
 
     <build>
-        <finalName>code-artisan</finalName>
+        <finalName>helmet</finalName>
         <plugins>
             <!--编译插件-->
             <plugin>

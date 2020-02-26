@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,23 +90,25 @@ public class PermissionHandler extends BaseHandler{
             permission.setpName(requestPermission.getpName());
             permission.setpUrl(requestPermission.getpUrl());
             permission.setpType(requestPermission.getpType());
-            permissionService.insert(permission);
+            permissionService.insertPermission(permission.getpName(),permission.getpUrl(),permission.getpType());
             Integer pId = permissionService.getIdByNameAndUrl(permission.getpName(),permission.getpUrl());
-            List pList = new ArrayList<Integer>();
-            pList.add(pId);
+            List pList = new ArrayList<Integer>();pList.add(pId);
             roleService.grantPrivileges(1,pList);
-
             String tk = requestPermission.getToken();
             TokenModel tokenModel = tokenManager.getToken(Base64Util.decodeData(tk));
-            tokenModel.setPermissionCode(tokenModel.getPermissionCode() + "&" + permission.getpType() + pId);
-
+            String [] authorityCode = authorityManager.getAuthorityCode(tokenModel.getUserId());
             tokenManager.deleteToken(tokenModel.getUserId());
-            TokenModel token = tokenManager.createToken(tokenModel.getUserId(), tokenModel.getPermissionCode(), tokenModel.getRoleCode());
+            TokenModel token = tokenManager.createToken(tokenModel.getUserId(), authorityCode[0], authorityCode[1]);
             resultBean.setData(Base64Util.encodeData(token.getToken()));
         }
         catch (Exception e){
             resultBean.setCode(StatusCode.HTTP_FAILURE);
-            resultBean.setMsg("Add permission Failed！");
+            if (e.getMessage().contains("SQLIntegrityConstraintViolationException")){
+                resultBean.setMsg("该表达式已有对应权限，添加失败！");
+            }
+            else{
+                resultBean.setMsg("Add permission Failed！");
+            }
             LOGGER.error("添加失败！", e);
         }
         return resultBean;
@@ -129,4 +132,24 @@ public class PermissionHandler extends BaseHandler{
         return resultBean;
     }
 
+    @ApiOperation(value = "修改权限", notes = "参数：pId，pName,pUrl,pType")
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultBean updatePermission(@RequestBody PermissionVO requestPermission) {
+        ResultBean resultBean = new ResultBean();
+        try {
+            Permission permission = new Permission();
+            permission.setpId(requestPermission.getpId());
+            permission.setpName(requestPermission.getpName());
+            permission.setpUrl(requestPermission.getpUrl());
+            permission.setpType(requestPermission.getpType());
+            permissionService.updateByPrimaryKey(permission);
+        }
+        catch (Exception e){
+            resultBean.setCode(StatusCode.HTTP_FAILURE);
+            resultBean.setMsg("Edit permission Failed！");
+            LOGGER.error("编辑失败！", e);
+        }
+        return resultBean;
+    }
 }

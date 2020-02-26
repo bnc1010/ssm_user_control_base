@@ -7,4 +7,6 @@ public interface IPermissionService extends IBaseService<Permission> {
     int getIdByNameAndUrl(String pName,String pUrl);
 
     void robPermission(int pId);
+
+    void insertPermission(String pName,String pUrl,String pType);
 }

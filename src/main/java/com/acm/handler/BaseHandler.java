@@ -1,5 +1,6 @@
 package com.acm.handler;
 
+import com.acm.authorization.manager.AuthorityManager;
 import com.acm.service.IPermissionService;
 import com.acm.service.IRoleService;
 import com.acm.service.IUserOperationService;
@@ -26,5 +27,8 @@ public class BaseHandler {
 
     @Autowired
     IUserOperationService userOperationService;
+
+    @Autowired
+    AuthorityManager authorityManager;
 
 }

@@ -153,21 +153,28 @@ public class UserHandler extends BaseHandler {
 
 
 
-    @ApiOperation(value = "根据id物理删除指定的Role，需谨慎！", notes = "参数：uId,token")
+    @ApiOperation(value = "根据id物理删除指定的Role，需谨慎！", notes = "参数：uIds,token")
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public ResultBean delete(@RequestBody UserVO requestUser) {
         ResultBean resultBean = new ResultBean();
         try {
             String tk = requestUser.getToken();
-            userOperationService.checkOperationToUserByToken(tk, requestUser.getuId());
-            userService.deleteByUserId(requestUser.getuId());
-            userService.deleteByPrimaryKey(requestUser.getuId());
+            boolean allOk = true;
+            for(Integer uId : requestUser.getuIds()){
+                allOk = userOperationService.checkOperationToUserByToken(tk, uId);
+            }
+            if (allOk){
+                for(Integer uId_ : requestUser.getuIds()){
+                    userService.deleteByUserId(uId_);
+                    userService.deleteByPrimaryKey(uId_);
+                }
+            }
         } catch (Exception e) {
             resultBean.setCode(StatusCode.HTTP_FAILURE);
             resultBean.setMsg(e.getMessage());
             e.printStackTrace();
-            LOGGER.error("删除失败！参数信息：id = " + requestUser.getuId(), e);
+            LOGGER.error("删除失败！参数信息：id = ", e);
         }
         return resultBean;
     }

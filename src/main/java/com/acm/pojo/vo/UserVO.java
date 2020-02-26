@@ -53,6 +53,8 @@ public class UserVO {
 
     private String [] rCodes;
 
+    private Integer [] uIds;
+
     public Integer getuId() {
         return uId;
     }
@@ -147,6 +149,14 @@ public class UserVO {
 
     public void setrIds(Integer [] rIds) {
         this.rIds = rIds;
+    }
+
+    public Integer[] getuIds() {
+        return uIds;
+    }
+
+    public void setuIds(Integer[] uIds) {
+        this.uIds = uIds;
     }
 
     @Override
